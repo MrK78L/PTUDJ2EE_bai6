@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{_layout :: layout(~{:: #main-content})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+</head>
+<body>
+<div id="main-content">
+
+    <!-- Create -->
+    <a sec:authorize="hasRole('ADMIN')"
+       th:href="@{/products/add}"
+       class="btn btn-primary mb-3">
+        Create New Product
+    </a>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Price</th>
+            <th>Category Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="product : ${products}">
+            <th th:text="${product.id}"></th>
+            <td th:text="${product.name}"></td>
+
+            <td>
+                <img height="120" width="150"
+                     th:src="${product.image}"
+                     alt="Product Image">
+            </td>
+
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.category != null ? product.category.name : ''}"></td>
+
+            <td>
+                <!-- Edit -->
+                <a sec:authorize="hasRole('ADMIN')"
+                   th:href="@{/products/edit/{id}(id=${product.id})}"
+                   class="btn btn-secondary">
+                    Edit
+                </a>
+
+                <!-- Delete -->
+                <a sec:authorize="hasRole('ADMIN')"
+                   th:href="@{/products/delete/{id}(id=${product.id})}"
+                   class="btn btn-danger"
+                   onclick="return confirm('Bạn có chắc muốn xóa?')">
+                    Delete
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
